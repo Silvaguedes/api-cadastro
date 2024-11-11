@@ -17,10 +17,11 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Configura o CORS
-const allowedOrigins = ['http://localhost:5173', 'https://registropessoas.netlify.app'];
+const allowedOrigins = ['https://registrationpeople.netlify.app', 'http://localhost:5173']; // Adicione os domínios permitidos
 
 app.use(cors({
   origin: function (origin, callback) {
+    // Permite a requisição se o origin estiver na lista de permitidos ou se não houver origin (para uso local)
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
@@ -28,6 +29,7 @@ app.use(cors({
     }
   }
 }));
+
 
 
 
