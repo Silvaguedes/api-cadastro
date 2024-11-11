@@ -17,9 +17,18 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Configura o CORS
+const allowedOrigins = ['http://localhost:5173', 'https://registropessoas.netlify.app'];
+
 app.use(cors({
-  origin: 'http://localhost:5173' // Origem correta do front-end
+  origin: function (origin, callback) {
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  }
 }));
+
 
 
 // Rota para cadastro de usuário
