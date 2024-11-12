@@ -16,11 +16,12 @@ const PORT = process.env.PORT || 3000;
 // Middleware para interpretar JSON
 app.use(express.json());
 
-// Configura o CORS
+// Configuração do CORS
 const allowedOrigins = ['https://registrationpeople.netlify.app', 'http://localhost:5173'];
 
-app.use(cors({
+const corsOptions = {
   origin: function (origin, callback) {
+    // Permite todas as requisições sem origin (necessário para chamadas locais como do Postman ou servidor)
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
     } else {
@@ -29,15 +30,11 @@ app.use(cors({
   },
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Permite todos os métodos HTTP necessários
   allowedHeaders: ['Content-Type', 'Authorization'], // Permite cabeçalhos específicos
-  credentials: true // Permite envio de credenciais, se necessário
-}));
+  credentials: true, // Permite envio de credenciais, se necessário
+};
 
-// Tratamento adicional para preflight requests (opcional)
-app.options('*', cors()); // Permite que todas as rotas respondam à preflight request
-
-
-
-
+// Aplica o middleware CORS globalmente
+app.use(cors(corsOptions));
 
 // Rota para cadastro de usuário
 app.post('/users', async (req, res) => {
@@ -99,7 +96,6 @@ app.delete('/users/:id', async (req, res) => {
     res.status(500).json({ message: 'Erro no servidor.' });
   }
 });
-
 
 // Iniciar o servidor
 app.listen(PORT, () => {
